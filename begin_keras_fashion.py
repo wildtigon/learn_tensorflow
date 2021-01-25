@@ -50,12 +50,12 @@ def plot_value_array(i, predictions_array, true_label):
     plt.grid(True)
     plt.xticks(range(10))
     plt.yticks([])
-    thisplot = plt.bar(range(10), predictions_array, color="#777777")
+    this_plot = plt.bar(range(10), predictions_array, color="#777777")
     plt.ylim(([0, 1]))
     predicted_label = np.argmax(predictions_array)
 
-    thisplot[predicted_label].set_color('red')
-    thisplot[true_label].set_color('blue')
+    this_plot[predicted_label].set_color('red')
+    this_plot[true_label].set_color('blue')
 
 
 def grab_model(predictions, index, test_labels, class_names, test_images):
@@ -123,17 +123,32 @@ def run():
         tf.keras.layers.Softmax()
     ])
 
+    evaluate_index = 5
     # Return all result
     predictions = probability_model(test_images)
-    print("\nList predictions")
-    print(predictions[0])
+    print("\nList predictions for: " + str(evaluate_index))
+    print(predictions[evaluate_index])
 
     # Then get the largest result
-    largest_prediction = np.argmax(predictions[0])
-    print("\nLargest prediction")
+    largest_prediction = np.argmax(predictions[evaluate_index])
+    print("\nLargest prediction for: " + str(evaluate_index))
     print(largest_prediction)
 
-    index = 12
-    #grab_model(predictions, index, test_labels, class_names, test_images)
-    grab_all_model(predictions, test_labels, test_images, class_names)
+    testing_index = 12
+    # grab_model(predictions, testing_index, test_labels, class_names, test_images)
+    # grab_all_model(predictions, test_labels, test_images, class_names)
 
+    # Predict single
+    img = test_images[testing_index]
+    img = (np.expand_dims(img, 0))
+
+    predictions_single = probability_model.predict(img)
+    plot_value_array(1, predictions_single[0], test_labels)
+    _ = plt.xticks(range(10), class_names, rotation=45)
+    plt.show()
+
+    result_in_index = np.argmax(predictions_single[0])
+    result_in_label = class_names[result_in_index]
+
+    print(result_in_index)
+    print(result_in_label)
